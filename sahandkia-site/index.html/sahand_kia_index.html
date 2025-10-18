@@ -1,0 +1,323 @@
+<!--
+Sahand Kia - Single-file website (index.html)
+Technologies: HTML + Tailwind (CDN) + vanilla JS (particles bg) + Formspree example
+Instructions:
+ 1) Save this file as `index.html` in a new Glitch/Vercel project or any static host.
+ 2) Replace the Formspree action URL with your own Formspree endpoint (or keep mailto fallback).
+ 3) To use the BNazanin font, either upload BNazanin.woff2 to the same folder and keep the @font-face below,
+    or replace the font-family in CSS with a system font.
+ 4) Replace the logo placeholder (id="logo") with your logo image or an <img> tag as commented.
+-->
+
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sahand Kia — Official</title>
+  <meta name="description" content="Sahand Kia — شاعر، نویسنده و صاحب کسب‌وکار دیجیتال. آثار، پروژه‌ها و راه‌های ارتباطی." />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Font: BNazanin - upload BNazanin.woff2 to same folder, or change family */
+    @font-face {
+      font-family: 'BNazanin';
+      src: url('./BNazanin.woff2') format('woff2');
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    :root{
+      --bg:#070707; /* deep black */
+      --muted:#bfbfbf;
+      --gold:#b98c48;
+      --accent: rgba(185,140,72,0.12);
+    }
+    html,body,#app{height:100%;}
+    body{
+      background: var(--bg);
+      color: #fff;
+      font-family: 'BNazanin', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+    }
+
+    /* navigation */
+    .nav-link{ color:rgba(255,255,255,0.9); }
+    .nav-link:hover{ color:var(--gold); }
+
+    /* headline */
+    .title-shadow{ text-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+
+    /* card */
+    .glass{ background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.04); backdrop-filter: blur(6px); }
+
+    /* particle canvas full-bleed */
+    #particles{ position:fixed; left:0; top:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+    /* subtle gold glow */
+    .glow{ box-shadow: 0 8px 30px rgba(185,140,72,0.18); }
+
+    /* responsive tweaks */
+    @media (min-width:1024px){
+      .title-hero{ font-size: clamp(40px, 6vw, 96px); }
+    }
+    @media (max-width:1023px){
+      .title-hero{ font-size: clamp(28px, 6vw, 48px); }
+    }
+
+    /* small visual flair lines */
+    .accent-line{ height:2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div id="app" class="relative z-10 min-h-screen flex flex-col">
+
+    <!-- NAV -->
+    <header class="w-full py-6 px-6 lg:px-20 flex items-center justify-between z-20">
+      <div class="flex items-center gap-4">
+        <!-- LOGO placeholder: replace with <img src="/logo.png" alt="Sahand Kia"> -->
+        <div id="logo" class="w-12 h-12 rounded-md bg-gradient-to-br from-black to-gray-900 flex items-center justify-center border border-white/6">
+          <span class="sr-only">Sahand Kia</span>
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="opacity-80">
+            <circle cx="12" cy="12" r="9" stroke="white" stroke-opacity="0.06" stroke-width="1.2" />
+            <path d="M6 16L10 8L14 16L18 8" stroke="white" stroke-opacity="0.08" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div class="hidden sm:block text-sm text-white/80">Sahand Kia</div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm">
+        <a class="nav-link" href="#home">خانه</a>
+        <a class="nav-link" href="#about">درباره</a>
+        <a class="nav-link" href="#projects">پروژه‌ها</a>
+        <a class="nav-link" href="#poems">شعر و موسیقی</a>
+        <a class="nav-link" href="#contact">ارتباط</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <a href="#contact" class="hidden md:inline-block px-4 py-2 rounded-md glow border border-transparent text-sm font-medium" style="background:linear-gradient(180deg,var(--gold), #997342); color:#0b0b0b;">تماس بگیر</a>
+        <button id="menuBtn" class="md:hidden p-2 rounded-md bg-white/3">☰</button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <main id="home" class="flex-1 flex items-center lg:items-start justify-center lg:justify-center px-6 lg:px-20 pb-20">
+      <section class="w-full max-w-6xl flex flex-col lg:flex-row items-center gap-12">
+
+        <div class="flex-1">
+          <h1 class="title-hero font-semibold text-white title-shadow">Sahand Kia</h1>
+          <p class="mt-6 text-lg text-white/80 max-w-xl">نویسنده، شاعر و کارآفرین دیجیتال — ترکیبی از هنر و تجارت. پروژه‌ها، آثار و خدمات حرفه‌ای‌ام را در اینجا پیدا کنید.</p>
+
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a href="#projects" class="px-5 py-3 rounded-md border border-white/6 glass">پروژه‌ها</a>
+            <a href="#poems" class="px-5 py-3 rounded-md border border-white/6 glass">شعر و موسیقی</a>
+            <a href="#contact" class="px-5 py-3 rounded-md glow" style="background:linear-gradient(180deg,var(--gold), #997342); color:#0b0b0b;">ارتباط با من</a>
+          </div>
+
+          <div class="mt-10 max-w-md">
+            <div class="accent-line mb-4"></div>
+            <div class="text-sm text-white/70">نام کسب‌وکار: <strong>Sahand Kia</strong></div>
+            <div class="text-sm text-white/70 mt-2">ایمیل تماس: <a href="mailto:sahand2kia@gmail.com" class="underline">sahand2kia@gmail.com</a></div>
+          </div>
+        </div>
+
+        <!-- visual card / placeholder for hero art -->
+        <aside class="w-full lg:w-1/3 flex items-center justify-center">
+          <div class="w-[320px] h-[420px] glass rounded-2xl p-6 flex flex-col justify-between shadow-2xl" style="border:1px solid rgba(255,255,255,0.03)">
+            <div>
+              <div class="w-full h-40 bg-gradient-to-br from-black via-gray-900 to-neutral-800 rounded-lg flex items-center justify-center">
+                <!-- put hero artwork or rotating 3d globe here later -->
+                <div class="text-white/50">تصویر یا لوگو اینجا قرار می‌گیرد</div>
+              </div>
+              <h3 class="mt-4 text-lg font-medium">خدمات Sahand Kia</h3>
+              <p class="mt-2 text-sm text-white/70">مشاوره محتوایی، طراحی بازاریابی محتوایی، ساخت آثار صوتی و همکاری هنری-تجاری.</p>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-white/60">مشاهده پروژه‌ها</div>
+              <div class="text-sm text-white/70">جزئیات بیشتر →</div>
+            </div>
+          </div>
+        </aside>
+
+      </section>
+    </main>
+
+    <!-- SECTIONS -->
+    <section id="about" class="px-6 lg:px-20 py-14">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl font-semibold mb-4">درباره من</h2>
+        <p class="text-white/80">من سهند کیافر هستم: شاعر، نویسنده و بنیان‌گذار کسب‌وکار دیجیتال "Sahand Kia". تمرکز من تولید آثار ادبی همراه با راهکارهای بازاریابی خلاق برای هنرمندان و کسب‌وکارهای کوچک است.</p>
+      </div>
+    </section>
+
+    <section id="projects" class="px-6 lg:px-20 py-14 bg-black/40">
+      <div class="max-w-6xl mx-auto">
+        <h2 class="text-2xl font-semibold mb-6">پروژه‌ها</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Project 1 -->
+          <article class="p-6 glass rounded-xl">
+            <h3 class="font-medium">مجرای خیال</h3>
+            <p class="mt-2 text-sm text-white/70">کانالی برای شعر، موسیقی و روایت‌های کوتاه — فضایی نو برای مخاطبان ادبی.</p>
+            <div class="mt-4 text-sm"><a class="underline" href="#">مشاهده</a></div>
+          </article>
+
+          <!-- Project 2 -->
+          <article class="p-6 glass rounded-xl">
+            <h3 class="font-medium">دیالوگیسم</h3>
+            <p class="mt-2 text-sm text-white/70">پروژه‌ای ترکیبی از روزمرگی، شعر و موسیقی؛ تمرکز بر ارتباط انسانی و روایت.</p>
+            <div class="mt-4 text-sm"><a class="underline" href="#">مشاهده</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="poems" class="px-6 lg:px-20 py-14">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-2xl font-semibold mb-6">شعر و موسیقی</h2>
+        <div class="space-y-6">
+          <article class="p-6 glass rounded-lg">
+            <h3 class="font-medium">من هنوزم شبیه بچگی‌ام</h3>
+            <p class="mt-2 text-sm text-white/70">نمونه‌ای از شعرها؛ برای قرار دادن شعرها و لینک به فایل‌های صوتی می‌توان این قسمت را گسترش داد.</p>
+            <div class="mt-4 text-sm"><a class="underline" href="#">پخش قطعه</a></div>
+          </article>
+
+          <article class="p-6 glass rounded-lg">
+            <h3 class="font-medium">قطعه صوتی — نمونه</h3>
+            <p class="mt-2 text-sm text-white/70">در اینجا می‌توان یک پلیر ساده HTML برای پخش موسیقی قرار داد.</p>
+            <audio controls class="w-full mt-4">
+              <source src="#" type="audio/mpeg">
+              مرورگر شما از پخش صوت پشتیبانی نمی‌کند.
+            </audio>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="px-6 lg:px-20 py-14 bg-black/30">
+      <div class="max-w-3xl mx-auto">
+        <h2 class="text-2xl font-semibold mb-4">ارتباط با من</h2>
+        <p class="text-white/80 mb-6">برای همکاری یا سفارش خدمات فرم را پر کنید یا از راه‌های سریع‌تر استفاده کنید.</p>
+
+        <!-- Contact form using Formspree (replace with your own form id) -->
+        <form id="contactForm" class="grid grid-cols-1 gap-4" method="POST" action="https://formspree.io/f/your-form-id">
+          <input name="name" placeholder="نام و نام خانوادگی" required class="p-3 rounded-md bg-black/60 border border-white/6" />
+          <input name="email" type="email" placeholder="ایمیل" required class="p-3 rounded-md bg-black/60 border border-white/6" />
+          <input name="subject" placeholder="موضوع" class="p-3 rounded-md bg-black/60 border border-white/6" />
+          <textarea name="message" placeholder="پیام شما" required rows="6" class="p-3 rounded-md bg-black/60 border border-white/6"></textarea>
+          <div class="flex items-center gap-4">
+            <button type="submit" class="px-5 py-3 rounded-md glow" style="background:linear-gradient(180deg,var(--gold), #997342); color:#0b0b0b;">ارسال پیام</button>
+            <a href="mailto:sahand2kia@gmail.com" class="px-4 py-3 rounded-md border border-white/6">ارسال از طریق ایمیل</a>
+            <a href="https://t.me/" target="_blank" class="px-4 py-3 rounded-md border border-white/6">تلگرام</a>
+          </div>
+        </form>
+
+        <p class="text-white/60 text-sm mt-4">نکته: برای استفاده از Formspree، به سایت Formspree بروید، فرم جدید بسازید و شناسهٔ فرم (form id) را جایگزین کنید. یا در صورت تمایل می‌توانم این مرحله را هم راهنمایی کنم.</p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="px-6 lg:px-20 py-10 text-sm text-white/60">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between">
+        <div>© <strong>Sahand Kia</strong> — همه حقوق محفوظ است.</div>
+        <div class="flex items-center gap-4 mt-4 md:mt-0">
+          <a href="#" class="underline">حریم خصوصی</a>
+          <a href="#" class="underline">قوانین</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts: particles background, simple interactions -->
+  <script>
+    // Simple canvas particle system for subtle 3D-like shimmer
+    (function(){
+      const canvas = document.getElementById('particles');
+      const ctx = canvas.getContext('2d');
+      let w = canvas.width = innerWidth;
+      let h = canvas.height = innerHeight;
+      const particles = [];
+      const count = Math.floor((w*h)/90000); // scale with screen
+
+      function rand(min,max){ return Math.random()*(max-min)+min }
+
+      function create(){
+        for(let i=0;i<count;i++){
+          particles.push({
+            x: Math.random()*w,
+            y: Math.random()*h,
+            r: rand(0.6,2.6),
+            vx: rand(-0.15,0.15),
+            vy: rand(-0.05,0.15),
+            alpha: rand(0.03,0.12)
+          });
+        }
+      }
+      create();
+
+      function resize(){ w=canvas.width=innerWidth; h=canvas.height=innerHeight; particles.length=0; create(); }
+      addEventListener('resize', resize);
+
+      let t=0;
+      function draw(){
+        ctx.clearRect(0,0,w,h);
+        // soft radial gradient center
+        const rg = ctx.createRadialGradient(w*0.75, h*0.38, 50, w*0.75, h*0.38, Math.max(w,h));
+        rg.addColorStop(0, 'rgba(185,140,72,0.06)');
+        rg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = rg;
+        ctx.fillRect(0,0,w,h);
+
+        for(let p of particles){
+          p.x += p.vx + Math.sin(t*0.0008 + p.x*0.0005)*0.2;
+          p.y += p.vy;
+          if(p.x<0) p.x = w;
+          if(p.x>w) p.x = 0;
+          if(p.y>h) p.y = 0;
+
+          // draw glow
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,255,255,'+p.alpha+')';
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+        t++;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // Smooth scroll for nav anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const href = a.getAttribute('href');
+        if(href.length>1){
+          e.preventDefault();
+          document.querySelector(href).scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      })
+    });
+
+    // menu toggle for mobile
+    const menuBtn = document.getElementById('menuBtn');
+    menuBtn && menuBtn.addEventListener('click', ()=>{
+      alert('برای مشاهده منو موبایل: در نسخه نهایی می‌توانم منوی کشویی اضافه کنم. اگر می‌خوای الان قرار بدم، می‌فرستم.');
+    });
+
+    // Form submit success feedback
+    const form = document.getElementById('contactForm');
+    form && form.addEventListener('submit', (e)=>{
+      // Let Formspree handle submission; show quick local feedback
+      const btn = form.querySelector('button[type="submit"]');
+      btn && (btn.disabled = true);
+      setTimeout(()=>{ btn && (btn.disabled = false); }, 2500);
+    });
+  </script>
+</body>
+</html>
